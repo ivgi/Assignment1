@@ -3,7 +3,7 @@
 curl  --header "Content-Type: application/json" --request POST --data '{"numIterations":2,"liveCellsPercent":60}' \
  host:port/DevAssignment-1.0/camel/push
  
-#Terms
+# Terms
 
 GOL - [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
