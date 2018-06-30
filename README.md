@@ -11,8 +11,7 @@ GOL - [Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
 
 Route 1
 1. Start from Route 1 which is triggered by a rest endpoint.
-curl  --header "Content-Type: application/json" --request POST --data '{"numIterations":2,"liveCellsPercent":60}' \
- <host>:<port>/DevAssignment-1.0/camel/push
+curl  --header "Content-Type: application/json" --request POST --data '{"numIterations":2,"liveCellsPercent":60}' localhost:8080/DevAssignment-1.0/camel/push
 2. Json is validated according to file schema.json. Json is converted to Input.java pojo.
 3. Using a bean component we log that GOL (Game of Life) is started.
 4. Convert Input.java back to json.
@@ -52,8 +51,6 @@ The output defines how many cells are alive after we iterate the board ${numIter
 -Camel routes are defined in /resources/camel/routs.xml
 
 -Maven is used as a build tool.
-
--Spring boot is used as a fast way to setup the project. War file is generated from this setup using mvn package command.
 
 -Spring, Apache Camel, AMQ, Hibernate, MySQL - All technologies used.
 

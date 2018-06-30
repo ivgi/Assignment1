@@ -1,7 +1,0 @@
-<rests xmlns="http://camel.apache.org/schema/spring">
-    <rest path="/push">
-        <post consumes="application/json">
-            <to uri="direct:push"/>
-        </post>
-    </rest>
-</rests>

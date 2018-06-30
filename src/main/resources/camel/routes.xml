@@ -1,31 +1,38 @@
-<routes xmlns="http://camel.apache.org/schema/spring">
-    <route streamCache="true">
-        <from uri="direct:push"/>
-        <doTry>
-            <to uri="json-validator:schema.json"/>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+    ">
+    <routeContext id="routes" xmlns="http://camel.apache.org/schema/spring">
+        <route streamCache="true">
+            <from uri="direct:push"/>
+            <doTry>
+                <to uri="json-validator:schema.json"/>
+                <unmarshal>
+                    <json library="Jackson" unmarshalTypeName="demo.gol.Input"/>
+                </unmarshal>
+                <bean ref="game" method="notify"/>
+                <marshal ref="demo.gol.Input">
+                    <json library="Jackson"/>
+                </marshal>
+                <wireTap uri="activemq:gol.input"/>
+                <transform>
+                    <constant>{"text":"Game of life started."}</constant>
+                </transform>
+                <doCatch>
+                    <exception>org.apache.camel.component.jsonvalidator.JsonValidationException</exception>
+                    <process ref="jsonValidationProcessor"/>
+                </doCatch>
+            </doTry>
+        </route>
+        <route>
+            <from uri="activemq:gol.input"/>
             <unmarshal>
                 <json library="Jackson" unmarshalTypeName="demo.gol.Input"/>
             </unmarshal>
-            <bean ref="game" method="notify"/>
-            <marshal ref="demo.gol.Input">
-                <json library="Jackson"/>
-            </marshal>
-            <wireTap uri="activemq:gol.input"/>
-            <transform>
-                <constant>{"text":"Game of life started."}</constant>
-            </transform>
-            <doCatch>
-                <exception>org.apache.camel.component.jsonvalidator.JsonValidationException</exception>
-                <process ref="jsonValidationProcessor"/>
-            </doCatch>
-        </doTry>
-    </route>
-    <route>
-        <from uri="activemq:gol.input"/>
-        <unmarshal>
-            <json library="Jackson" unmarshalTypeName="demo.gol.Input"/>
-        </unmarshal>
-        <bean ref="game" method="play"/>
-        <to uri="jpa:demo.gol.Output"/>
-    </route>
-</routes>
+            <bean ref="game" method="play"/>
+            <to uri="jpa:demo.gol.Output"/>
+        </route>
+    </routeContext>
+</beans>
